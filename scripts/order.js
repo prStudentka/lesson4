@@ -22,6 +22,7 @@ const orderIdValue = document.getElementById('orderId');
 
 // Элементы карточек размеров
 const sizes = document.querySelectorAll('.main-size-card');
+const speeds = document.querySelectorAll('.main-speed-card');
 
 // Переменные для карты, маршрута и расчетов
 let map;
@@ -47,14 +48,20 @@ ymaps.ready(() => {
 	new ymaps.SuggestView('from');
 	new ymaps.SuggestView('to');
 
+    // Логика выбора размера посылки и скорости доставки
+    [sizes, speeds].forEach(group => {
+        group.forEach(element => {
 
-	// Логика выбора размера посылки
-	sizes.forEach(element => {
-		element.addEventListener('click', () => {
-			sizes.forEach((c) => c.classList.toggle('is-active', c.dataset.value === element.dataset.value));
-			// обнуление
-			renderInfo();
-		})
+		// Логика выбора размера посылки
+		sizes.forEach(element => {
+			element.addEventListener('click', () => {
+					group.forEach((c) => c.classList.toggle('is-active', c.dataset.value === element.dataset.value));
+				sizes.forEach((c) => c.classList.toggle('is-active', c.dataset.value === element.dataset.value));
+				
+				// обнуление
+				renderInfo();
+			})
+		});
 	});
 
 	// Дизейблим кнопку Рассчитать если одного или двух значений нет
@@ -102,6 +109,15 @@ calcButton.addEventListener('click', () => {
 			// Просчитываем длительность доставки
 			let duration = Math.min(30, 1 + Math.ceil(km / 80));
 
+
+            // Увеличиваем на 15% и сокращаем время на 30%
+            const speed = document.querySelector('.main-speed-card.is-active').dataset.value;
+            if (speed === 'fast') {
+                total = Math.ceil(total * 1.15);
+                duration = Math.ceil(duration - (duration * 0.30));
+            }
+
+
 			calculation = {
 				from: fromInput.value,
 				to: toInput.value,
@@ -109,6 +125,7 @@ calcButton.addEventListener('click', () => {
 				distance: km.toFixed(1),
 				duration: duration,
 				rate: RATES[size],
+				speed: speed,
 				total: total
 			};
 
