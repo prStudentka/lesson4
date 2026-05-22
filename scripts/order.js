@@ -22,6 +22,7 @@ const orderIdValue = document.getElementById('orderId');
 
 // Элементы карточек размеров
 const sizes = document.querySelectorAll('.main-size-card');
+// Элементы карточек скоростей
 const speeds = document.querySelectorAll('.main-speed-card');
 
 // Переменные для карты, маршрута и расчетов
@@ -48,17 +49,11 @@ ymaps.ready(() => {
 	new ymaps.SuggestView('from');
 	new ymaps.SuggestView('to');
 
-    // Логика выбора размера посылки и скорости доставки
-    [sizes, speeds].forEach(group => {
-        group.forEach(element => {
-
-		// Логика выбора размера посылки
-		sizes.forEach(element => {
+	// Логика выбора размера посылки и скорости доставки
+	[sizes, speeds].forEach(group => {
+		group.forEach(element => {
 			element.addEventListener('click', () => {
-					group.forEach((c) => c.classList.toggle('is-active', c.dataset.value === element.dataset.value));
-				sizes.forEach((c) => c.classList.toggle('is-active', c.dataset.value === element.dataset.value));
-				
-				// обнуление
+				group.forEach((c) => c.classList.toggle('is-active', c.dataset.value === element.dataset.value));
 				renderInfo();
 			})
 		});
